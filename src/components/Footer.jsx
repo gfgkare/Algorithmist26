@@ -45,10 +45,7 @@ const Footer = () => {
                             <a href="https://www.linkedin.com/company/gfg-kare-student-chapter/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-500 transition-all hover:-translate-y-1">
                                 <Linkedin size={20} />
                             </a>
-                            <a href="https://github.com/gfgkare" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-black transition-all hover:-translate-y-1">
-                                <Github size={20} />
-                            </a>
-                            <a href="mailto:gfgkare@gmail.com" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-red-500 transition-all hover:-translate-y-1">
+                            <a href="mailto:gfgkarestudentchapter@klu.ac.in" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-red-500 transition-all hover:-translate-y-1">
                                 <Mail size={20} />
                             </a>
                         </div>
