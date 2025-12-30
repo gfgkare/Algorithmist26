@@ -20,7 +20,30 @@ const Navbar = () => {
         { title: 'Roadmap', href: '#roadmap' },
         { title: 'Why Join', href: '#why-participate' },
         { title: 'Highlights', href: '#highlights' },
+        { title: 'Rules', href: '#rulebook' },
     ];
+
+    const handleNavClick = (e, href) => {
+        e.preventDefault();
+        setIsOpen(false);
+
+        setTimeout(() => {
+            const elementId = href.replace('#', '');
+            const element = document.getElementById(elementId);
+
+            if (element) {
+                // Determine offset based on screen size (mobile tends to need a bit more buffer if header compresses)
+                const headerOffset = 80;
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        }, 300); // 300ms delay to allow menu animation to finish
+    };
 
     return (
         <motion.nav
@@ -38,10 +61,9 @@ const Navbar = () => {
             }}
         >
             <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
-                <a href="#" className="flex items-center gap-2 group">
-                    <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform"
-                        style={{ background: 'linear-gradient(135deg, var(--primary), var(--dark-green))', color: 'white' }}>
-                        <Code2 size={24} />
+                <a href="#" className="flex items-center gap-3 group" onClick={(e) => handleNavClick(e, '#hero')}>
+                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden p-1 shadow-lg shadow-green-500/20">
+                        <img src="/gfg_logo.jpeg" alt="GFG" className="w-full h-full object-contain" />
                     </div>
                     <div className="flex flex-col">
                         <span className="font-bold text-xl leading-normal tracking-normal text-white">ALGORITHMST 26</span>
@@ -55,6 +77,7 @@ const Navbar = () => {
                         <a
                             key={link.title}
                             href={link.href}
+                            onClick={(e) => handleNavClick(e, link.href)}
                             className="text-gray-300 hover:text-green-400 font-medium text-sm transition-colors relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-green-500 after:transition-all hover:after:w-full"
                             style={{ color: 'var(--text-main)' }}
                         >
@@ -62,7 +85,8 @@ const Navbar = () => {
                         </a>
                     ))}
                     <a
-                        href="#register"
+                        href="#rulebook"
+                        onClick={(e) => handleNavClick(e, '#rulebook')}
                         className="px-6 py-2.5 rounded-full font-semibold text-white shadow-lg hover:shadow-green-500/30 hover:-translate-y-0.5 transition-all text-sm"
                         style={{ background: 'var(--primary)', color: 'white' }}
                     >
@@ -94,16 +118,17 @@ const Navbar = () => {
                                 <a
                                     key={link.title}
                                     href={link.href}
-                                    onClick={() => setIsOpen(false)}
-                                    className="text-lg font-medium text-gray-200 py-2 border-b border-gray-800"
+                                    onClick={(e) => handleNavClick(e, link.href)}
+                                    className="text-base font-medium text-gray-200 py-1.5 border-b border-gray-800"
                                 >
                                     {link.title}
                                 </a>
                             ))}
                             <a
-                                href="#register"
-                                className="w-full text-center py-3 rounded-xl font-bold text-white mt-2"
+                                href="#rulebook"
+                                className="w-full text-center py-2.5 rounded-xl font-bold text-white mt-2 text-sm"
                                 style={{ background: 'var(--primary)' }}
+                                onClick={(e) => handleNavClick(e, '#rulebook')}
                             >
                                 Register Now
                             </a>

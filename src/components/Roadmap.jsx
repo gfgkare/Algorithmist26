@@ -4,11 +4,11 @@ import { CheckCircle2, BookOpen, Presentation, Bug, Terminal } from 'lucide-reac
 import TiltCard from './TiltCard';
 
 const rounds = [
-    { id: 1, title: "Round 1", subtitle: "MCQ Questions", desc: "Test your logic and algorithmic knowledge with a series of challenging multiple-choice questions.", prize: "Prize: Top 30 Qualify for Next Round", prizeIcon: "🏆", icon: <CheckCircle2 size={24} /> },
-    { id: 2, title: "Round 2", subtitle: "Algo Seminars", desc: "Participate in interactive sessions to deepen your understanding of core algorithms.", prize: "Prize: GFG T-Shirt & Goodies + Merit Cert", prizeIcon: "👕", icon: <BookOpen size={24} /> },
-    { id: 3, title: "Round 3", subtitle: "Article Presentation", desc: "Research and present on the latest trends and breakthroughs in computer science.", prize: "Prize: Zebronics Keyboard & Mouse Combo", prizeIcon: "⌨️", icon: <Presentation size={24} /> },
-    { id: 4, title: "Round 4", subtitle: "Debugging", desc: "Find and fix the bugs in the provided code snippets within the time limit.", prize: "Prize: GFG Diary, Pen & Key Chain", prizeIcon: "🎁", icon: <Bug size={24} /> },
-    { id: 5, title: "Round 5", subtitle: "Coding", desc: "The ultimate coding showdown. Solve complex problems and prove your skills.", prize: "Prize: Cash Prizes worth ₹6000", prizeIcon: "💰", icon: <Terminal size={24} /> }
+    { id: 1, title: "Round 1: AlgoTussle", subtitle: "Quiz", desc: "Scenario based problems, Time-Space Complexity, Predict the output.", icon: <CheckCircle2 size={24} /> },
+    { id: 2, title: "Round 2: AlgoRythms", subtitle: "Seminar", desc: "Seminar based on selected Algorithms (3 – 4).", prize: "Prize: GFG T-Shirt & Goodies + Merit Cert", prizeIcon: "👕", icon: <BookOpen size={24} /> },
+    { id: 3, title: "Round 3: AlgoPage2Stage", subtitle: "Article Presentation", desc: "A PPT Presentation based on Recent Algorithm.", prize: "Prize: Zebronics Keyboard & Mouse Combo", prizeIcon: "⌨️", icon: <Presentation size={24} /> },
+    { id: 4, title: "Round 4: AlgoSniff", subtitle: "Debug", desc: "Debugging the Given Code.", prize: "Prize: GFG Diary, Pen & Key Chain", prizeIcon: "🎁", icon: <Bug size={24} /> },
+    { id: 5, title: "Round 5: AlgoCodeBlitz", subtitle: "Grand Finale", desc: "Showcasing the Coding Skills.", prize: "Prize: Cash Prizes worth ₹6000", prizeIcon: "💰", icon: <Terminal size={24} /> }
 ];
 
 const Roadmap = () => {
@@ -19,7 +19,7 @@ const Roadmap = () => {
     });
 
     return (
-        <section id="roadmap" className="py-24 relative overflow-hidden">
+        <section id="roadmap" className="py-16 md:py-24 relative overflow-hidden">
             <div className="container mx-auto px-6 relative z-10" ref={containerRef}>
                 <div className="text-center mb-20">
                     <motion.div
@@ -28,8 +28,8 @@ const Roadmap = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h2 className="text-4xl md:text-6xl font-black mb-4 tracking-normal">Event <span className="text-green-600">Roadmap</span></h2>
-                        <p className="text-xl text-gray-500">The journey to victory</p>
+                        <h2 className="text-3xl md:text-6xl font-black mb-4 tracking-normal">Event <span className="text-green-600">Roadmap</span></h2>
+                        <p className="text-lg text-gray-500">The journey to victory</p>
                     </motion.div>
                 </div>
 
@@ -60,11 +60,13 @@ const Roadmap = () => {
                                             <div className="glass-card p-6 rounded-2xl border border-white/10 shadow-lg hover:shadow-green-500/20 transition-all bg-white/5 backdrop-blur-sm">
                                                 <h3 className="text-2xl font-bold text-gray-100 mb-1">{round.title}</h3>
                                                 <h4 className="text-lg font-semibold text-green-400 mb-2">{round.subtitle}</h4>
-                                                <p className="text-gray-400 mb-4">{round.desc}</p>
-                                                <div className="flex items-center gap-2 text-yellow-400 font-medium text-sm bg-yellow-400/10 px-3 py-1.5 rounded-lg w-fit border border-yellow-400/20 shadow-sm">
-                                                    <span className="text-lg">{round.prizeIcon}</span>
-                                                    <span>{round.prize}</span>
-                                                </div>
+                                                <p className="text-gray-100 mb-1">{round.desc}</p>
+                                                {round.prize && (
+                                                    <div className={`flex items-center gap-2 text-yellow-400 font-medium text-sm bg-yellow-400/10 px-3 py-1.5 rounded-lg w-fit border border-yellow-400/20 shadow-sm ${[2, 4].includes(round.id) ? 'ml-auto' : ''}`}>
+                                                        <span className="text-lg">{round.prizeIcon}</span>
+                                                        <span>{round.prize}</span>
+                                                    </div>
+                                                )}
                                             </div>
                                         </TiltCard>
                                     </div>

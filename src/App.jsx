@@ -6,6 +6,7 @@ import Roadmap from './components/Roadmap';
 import WhyParticipate from './components/WhyParticipate';
 import Highlights from './components/Highlights';
 import Footer from './components/Footer';
+import RuleBook from './components/RuleBook';
 import IntroAnimation from './components/IntroAnimation';
 import DynamicBackground from './components/DynamicBackground';
 import CustomCursor from './components/CustomCursor';
@@ -33,6 +34,7 @@ function App() {
                         <Roadmap />
                         <WhyParticipate />
                         <Highlights />
+                        <RuleBook />
                     </main>
                     <Footer />
                 </div>

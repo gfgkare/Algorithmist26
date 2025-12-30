@@ -4,13 +4,13 @@ import TiltCard from './TiltCard';
 
 const Highlights = () => {
     return (
-        <section id="highlights" className="py-20 bg-transparent">
+        <section id="highlights" className="py-12 md:py-24 bg-transparent">
             <div className="container mx-auto px-6 max-w-7xl">
                 <div className="flex flex-col md:flex-row gap-12 items-center">
 
                     <div className="md:w-1/3">
                         <span className="text-green-600 font-bold uppercase tracking-wider text-sm mb-2 block" style={{ color: 'var(--primary)' }}>Highlights</span>
-                        <h2 className="text-4xl font-bold mb-6 text-white leading-tight">
+                        <h2 className="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">
                             Igniting the <br />
                             <span className="text-green-500" style={{ color: 'var(--primary)' }}>Spark of Logic</span>
                         </h2>

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Terminal } from 'lucide-react';
+import { ArrowRight, Terminal, Award, Briefcase } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const ColorCycleText = ({ text }) => {
@@ -59,14 +59,23 @@ const Hero = () => {
                             className="w-2 h-2 rounded-full bg-green-500"
                             style={{ background: 'var(--primary)' }}
                         />
-                        <span className="text-gray-200 font-semibold">GFG Campus Body KARE Presents</span>
+                        <motion.span
+                            animate={{
+                                color: ["#4ade80", "#ffffff", "#4ade80"],
+                                textShadow: ["0 0 10px rgba(74, 222, 128, 0.5)", "0 0 0px rgba(74, 222, 128, 0)", "0 0 10px rgba(74, 222, 128, 0.5)"]
+                            }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            className="font-bold tracking-wide"
+                        >
+                            GFG Campus Body KARE Presents
+                        </motion.span>
                     </motion.div>
 
-                    <h1 className="text-4xl md:text-7xl font-extrabold leading-tight mb-6 tracking-normal text-white">
+                    <h1 className="text-3xl md:text-7xl font-extrabold leading-tight mb-6 tracking-normal text-white">
                         <ColorCycleText text="ALGORITHMST 26" />
                     </h1>
 
-                    <h2 className="text-xl md:text-2xl text-gray-400 mb-8 font-light max-w-lg mx-auto md:mx-0">
+                    <h2 className="text-lg md:text-2xl text-gray-400 mb-8 font-light max-w-lg mx-auto md:mx-0">
                         A Grand Celebration of Algorithms, Logic & Coding Excellence.
                     </h2>
 
@@ -75,7 +84,7 @@ const Hero = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             href="#register"
-                            className="px-8 py-4 rounded-xl font-bold text-white shadow-lg shadow-green-500/20 flex items-center justify-center gap-2 text-lg"
+                            className="px-6 py-3 rounded-xl font-bold text-white shadow-lg shadow-green-500/20 flex items-center justify-center gap-2 text-lg"
                             style={{ background: 'var(--primary)' }}
                         >
                             Register Now <ArrowRight size={20} />
@@ -84,11 +93,42 @@ const Hero = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             href="#roadmap"
-                            className="px-8 py-4 rounded-xl font-bold bg-white/5 text-gray-200 border border-white/10 shadow-md flex items-center justify-center gap-2 text-lg hover:shadow-lg hover:bg-white/10 transition-all backdrop-blur-sm"
+                            className="px-6 py-3 rounded-xl font-bold bg-white/5 text-gray-200 border border-white/10 shadow-md flex items-center justify-center gap-2 text-lg hover:shadow-lg hover:bg-white/10 transition-all backdrop-blur-sm"
                         >
                             View Roadmap
                         </motion.a>
                     </div>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5, duration: 0.8 }}
+                        className="mt-8 md:mt-12 mb-8 p-4 md:p-6 bg-green-500/10 border border-green-500/30 rounded-2xl relative overflow-hidden backdrop-blur-sm max-w-lg"
+                    >
+                        <div className="absolute top-0 left-0 w-1 h-full bg-green-500 box-content"></div>
+                        <h4 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 flex items-center gap-2">
+                            <span className="text-green-400">⚡</span> Important Event Details
+                        </h4>
+                        <ul className="space-y-3 text-gray-200">
+                            <li className="flex items-start gap-3">
+                                <span className="bg-green-500/20 p-1 rounded text-green-400 mt-1">
+                                    <Award size={16} />
+                                </span>
+                                <span>
+                                    <strong className="text-green-400 block mb-1 text-sm md:text-base">2 Experimental Elective Credits</strong>
+                                    <span className="text-xs md:text-sm text-gray-400 leading-snug block">(Attending all the rounds is required to claim Credits)</span>
+                                </span>
+                            </li>
+                            <li className="flex items-center gap-3">
+                                <span className="bg-green-500/20 p-1 rounded text-green-400">
+                                    <Briefcase size={16} />
+                                </span>
+                                <span className="text-sm md:text-lg">
+                                    Registration Fees : <strong className="text-white text-base md:text-xl">Rs 150 /-</strong>
+                                </span>
+                            </li>
+                        </ul>
+                    </motion.div>
                 </motion.div>
 
                 {/* Right Graphic */}

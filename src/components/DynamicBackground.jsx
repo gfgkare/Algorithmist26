@@ -83,9 +83,9 @@ const DynamicBackground = () => {
 
             {/* 4. Modern Grid Overlay (White subtle lines for dark mode) */}
             <div
-                className="absolute inset-0 z-0 opacity-[0.1]"
+                className="absolute inset-0 z-0 opacity-[0.2]"
                 style={{
-                    backgroundImage: `linear-gradient(#222 1px, transparent 1px), linear-gradient(90deg, #222 1px, transparent 1px)`,
+                    backgroundImage: `linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)`,
                     backgroundSize: '40px 40px'
                 }}
             />
