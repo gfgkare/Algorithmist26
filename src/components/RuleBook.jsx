@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Scroll, Users, Ticket, AlertTriangle, Clock, ShieldAlert, Award, BookOpen } from 'lucide-react';
+import { Scroll, Users, Ticket, AlertTriangle, Clock, ShieldAlert, Award, BookOpen, LayoutList, ExternalLink } from 'lucide-react';
 import TiltCard from './TiltCard';
 
 const RuleBook = () => {
@@ -36,10 +36,10 @@ const RuleBook = () => {
                                 <div className="relative z-10">
                                     <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-3">
                                         <Scroll className="text-green-500" />
-                                        Algorithmist’26
+                                        Algorithmist<span className="text-green-500">’26</span>
                                     </h3>
                                     <p className="text-gray-300 text-base md:text-lg leading-relaxed mb-6">
-                                        <span className="text-green-400 font-semibold">"Algorithmist’26"</span> is a coding event designed for students, with the goal of increasing coding culture in our college. The competition comprises five rounds, each progressively raising the bar in terms of complexity and challenge.
+                                        <span className="text-white font-semibold">"Algorithmist</span> <span className="text-green-400 font-semibold">’26"</span> is a coding event designed for students, with the goal of increasing coding culture in our college. The competition comprises five rounds, each progressively raising the bar in terms of complexity and challenge.
                                     </p>
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div className="bg-white/5 p-4 rounded-xl border border-white/10">
@@ -153,6 +153,45 @@ const RuleBook = () => {
                             </div>
                         </motion.div>
                     </div>
+
+                    {/* List of Algorithms Card */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.3 }}
+                    >
+                        <div className="glass-card p-6 md:p-10 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md relative overflow-hidden group shadow-2xl">
+                            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                <LayoutList size={150} />
+                            </div>
+                            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
+                                <div className="md:w-2/3">
+                                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 flex items-center justify-center md:justify-start gap-3">
+                                        <LayoutList className="text-green-500" />
+                                        List Of Algorithms
+                                    </h3>
+                                    <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-6">
+                                        To ensure a focused and competitive environment, we have curated a specialized collection of algorithms that will serve as the core syllabus for all competitive rounds. Mastery of these fundamental and advanced patterns is essential for tackling the challenges in <span className="text-white font-semibold italic">Algorithmist </span> <span className="text-green-400 font-semibold italic">'26</span>.
+                                    </p>
+                                    <p className="text-gray-400 text-[10px] md:text-sm italic">
+                                        * The syllabus includes variants of Sorting, Searching, Dynamic Programming, and Graph Theory adapted for real-world scenarios.
+                                    </p>
+                                </div>
+                                <div className="md:w-1/3 w-full">
+                                    <a
+                                        href="https://gfgkare.github.io/algo26-rulebook/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center justify-center gap-3 w-full bg-white/5 hover:bg-green-500 hover:text-black border border-green-500/30 py-4 px-6 rounded-2xl font-bold text-green-400 transition-all group/btn shadow-lg shadow-green-500/5 hover:shadow-green-500/20"
+                                    >
+                                        <span>VIEW FULL LIST</span>
+                                        <ExternalLink size={18} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
 
                 </div>
             </div>

@@ -42,7 +42,7 @@ const IntroAnimation = ({ onComplete }) => {
                             exit={{ opacity: 0, filter: "blur(10px)" }}
                             className="text-center"
                         >
-                            <h2 className="text-2xl md:text-3xl text-white font-light tracking-[0.2em] mb-4">
+                            <h2 className="text-2xl md:text-3xl text-white font-light tracking-[0.2em]">
                                 GFG CAMPUS BODY KARE
                             </h2>
                         </motion.div>
@@ -70,14 +70,14 @@ const IntroAnimation = ({ onComplete }) => {
                             onAnimationComplete={() => setTimeout(onComplete, 1000)}
                             className="text-center relative"
                         >
-                            <h1 className="text-5xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600 tracking-tighter filter drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]">
+                            <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter filter drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]">
                                 ALGORITHMST
                             </h1>
                             <motion.span
                                 initial={{ x: -20, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
                                 transition={{ delay: 0.5 }}
-                                className="text-4xl md:text-7xl font-bold text-white absolute -right-4 -bottom-4 md:-right-8 md:-bottom-8"
+                                className="text-4xl md:text-7xl font-bold text-green-400 absolute -right-4 -bottom-4 md:-right-8 md:-bottom-8"
                             >
                                 26
                             </motion.span>

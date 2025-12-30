@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Code2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -27,22 +29,29 @@ const Navbar = () => {
         e.preventDefault();
         setIsOpen(false);
 
-        setTimeout(() => {
-            const elementId = href.replace('#', '');
-            const element = document.getElementById(elementId);
+        if (href.startsWith('#')) {
+            setTimeout(() => {
+                const elementId = href.replace('#', '');
+                const element = document.getElementById(elementId);
 
-            if (element) {
-                // Determine offset based on screen size (mobile tends to need a bit more buffer if header compresses)
-                const headerOffset = 80;
-                const elementPosition = element.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                if (element) {
+                    const headerOffset = 80;
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
-                });
-            }
-        }, 300); // 300ms delay to allow menu animation to finish
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            }, 300);
+        }
+    };
+
+    const handleRegisterClick = (e) => {
+        e.preventDefault();
+        setIsOpen(false);
+        navigate('/register');
     };
 
     return (
@@ -63,10 +72,10 @@ const Navbar = () => {
             <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
                 <a href="#" className="flex items-center gap-3 group" onClick={(e) => handleNavClick(e, '#hero')}>
                     <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden p-1 shadow-lg shadow-green-500/20">
-                        <img src="/gfg_logo.jpeg" alt="GFG" className="w-full h-full object-contain" />
+                        <img src="/gfg.jpeg" alt="GFG" className="w-full h-full object-contain" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="font-bold text-xl leading-normal tracking-normal text-white">ALGORITHMST 26</span>
+                        <span className="font-bold text-xl leading-normal tracking-normal text-white">ALGORITHMST <span className="text-green-500">26</span></span>
                         <span className="text-xs font-medium text-green-600" style={{ color: 'var(--primary)' }}>KARE</span>
                     </div>
                 </a>
@@ -84,14 +93,13 @@ const Navbar = () => {
                             {link.title}
                         </a>
                     ))}
-                    <a
-                        href="#rulebook"
-                        onClick={(e) => handleNavClick(e, '#rulebook')}
+                    <button
+                        onClick={handleRegisterClick}
                         className="px-6 py-2.5 rounded-full font-semibold text-white shadow-lg hover:shadow-green-500/30 hover:-translate-y-0.5 transition-all text-sm"
                         style={{ background: 'var(--primary)', color: 'white' }}
                     >
                         Register Now
-                    </a>
+                    </button>
                 </div>
 
                 {/* Mobile Toggle */}
@@ -124,14 +132,13 @@ const Navbar = () => {
                                     {link.title}
                                 </a>
                             ))}
-                            <a
-                                href="#rulebook"
+                            <button
                                 className="w-full text-center py-2.5 rounded-xl font-bold text-white mt-2 text-sm"
                                 style={{ background: 'var(--primary)' }}
-                                onClick={(e) => handleNavClick(e, '#rulebook')}
+                                onClick={handleRegisterClick}
                             >
                                 Register Now
-                            </a>
+                            </button>
                         </div>
                     </motion.div>
                 )}

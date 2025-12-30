@@ -3,29 +3,19 @@ import { Brain, Trophy, Users, Award, Briefcase } from 'lucide-react';
 
 const benefits = [
     {
-        icon: <Brain size={32} />,
-        title: "Algorithmic Thinking",
-        desc: "Sharpen your problem-solving skills and learn to approach challenges logically."
-    },
-    {
-        icon: <Users size={32} />,
-        title: "Peer Learning",
-        desc: "Connect with like-minded coders and learn from the collective experience."
-    },
-    {
         icon: <Briefcase size={32} />,
         title: "Placement Oriented",
         desc: "The algorithms chosen are highly targeted and directly aligned with placement-oriented problem-solving requirements."
     },
     {
-        icon: <Trophy size={32} />,
-        title: "Hands-on Experience",
-        desc: "Apply theoretical concepts in real-world coding and debugging scenarios."
-    },
-    {
         icon: <Award size={32} />,
         title: "Exciting Prizes",
         desc: "Prizes will be awarded to the top Performers in each round. Prizes include GFG Goodies, Zebronics Keyboard & Mouse Combo and Cash Prizes."
+    },
+    {
+        icon: <Brain size={32} />,
+        title: "Algorithmic Thinking",
+        desc: "Sharpen your problem-solving skills and learn to approach challenges logically."
     }
 ];
 

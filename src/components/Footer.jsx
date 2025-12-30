@@ -9,9 +9,9 @@ const Footer = () => {
                     <div className="col-span-1 md:col-span-1">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center overflow-hidden p-1">
-                                <img src="/gfg_logo.jpeg" alt="GFG" className="w-full h-full object-contain" />
+                                <img src="/gfg.jpeg" alt="GFG" className="w-full h-full object-contain" />
                             </div>
-                            <span className="font-bold text-lg">ALGORITHMST 26</span>
+                            <span className="font-bold text-lg">ALGORITHMST <span className="text-green-500">26</span></span>
                         </div>
                         <p className="text-gray-400 text-sm mb-4">
                             A Grand Celebration of Algorithms, Logic & Coding Excellence presented by GFG Campus Body KARE.

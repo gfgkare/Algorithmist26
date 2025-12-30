@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Terminal, Award, Briefcase, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ColorCycleText = ({ text }) => {
     return (
@@ -25,7 +26,10 @@ const ColorCycleText = ({ text }) => {
     );
 };
 
+
+
 const Hero = () => {
+    const navigate = useNavigate();
     return (
         <section id="hero" className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-20">
             {/* Background Elements */}
@@ -77,15 +81,15 @@ const Hero = () => {
                     </h2>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                        <motion.a
+                        <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            href="#register"
+                            onClick={() => navigate('/register')}
                             className="px-6 py-3 rounded-xl font-bold text-white shadow-lg shadow-green-500/20 flex items-center justify-center gap-2 text-lg"
                             style={{ background: 'var(--primary)' }}
                         >
                             Register Now <ArrowRight size={20} />
-                        </motion.a>
+                        </motion.button>
                         <motion.a
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}

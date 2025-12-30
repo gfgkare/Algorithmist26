@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Lightbulb, Target, Zap, Users } from 'lucide-react';
 import TiltCard from './TiltCard';
@@ -17,9 +18,9 @@ const Highlights = () => {
                         <p className="text-gray-400 mb-6">
                             Algorithmst 26 is more than a competition. It is a festival of intellect, designed to bring out the best in every participant through collaboration and rigorous challenge.
                         </p>
-                        <a href="#register" className="text-green-600 font-bold hover:underline flex items-center gap-2" style={{ color: 'var(--primary)' }}>
+                        <Link to="/register" className="text-green-600 font-bold hover:underline flex items-center gap-2" style={{ color: 'var(--primary)' }}>
                             Join the Movement &rarr;
-                        </a>
+                        </Link>
                     </div>
 
                     <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-6">
