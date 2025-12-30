@@ -31,7 +31,7 @@ const benefits = [
 
 const WhyParticipate = () => {
     return (
-        <section id="why-participate" className="py-16 md:py-24 relative overflow-hidden text-white bg-green-900/80 backdrop-blur-lg border-y border-white/10">
+        <section id="why-participate" className="py-12 md:py-24 relative overflow-hidden text-white bg-green-900/80 backdrop-blur-lg border-y border-white/10">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10"
                 style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}>
@@ -59,7 +59,7 @@ const WhyParticipate = () => {
                             <div className="mb-6 p-4 bg-green-500/20 rounded-xl inline-block text-green-300 group-hover:text-white group-hover:bg-green-500 transition-colors" style={{ color: 'var(--primary-hover)' }}>
                                 {item.icon}
                             </div>
-                            <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                            <h3 className="text-lg md:text-xl font-bold mb-3">{item.title}</h3>
                             <p className="text-green-100 opacity-70 leading-relaxed">{item.desc}</p>
                         </motion.div>
                     ))}

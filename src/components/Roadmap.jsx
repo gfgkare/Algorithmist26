@@ -19,9 +19,9 @@ const Roadmap = () => {
     });
 
     return (
-        <section id="roadmap" className="py-16 md:py-24 relative overflow-hidden">
+        <section id="roadmap" className="py-12 md:py-24 relative overflow-hidden">
             <div className="container mx-auto px-6 relative z-10" ref={containerRef}>
-                <div className="text-center mb-20">
+                <div className="text-center mb-16 md:mb-20">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -29,7 +29,7 @@ const Roadmap = () => {
                         transition={{ duration: 0.6 }}
                     >
                         <h2 className="text-3xl md:text-6xl font-black mb-4 tracking-normal">Event <span className="text-green-600">Roadmap</span></h2>
-                        <p className="text-lg text-gray-500">The journey to victory</p>
+                        <p className="text-base md:text-lg text-gray-500">The journey to victory</p>
                     </motion.div>
                 </div>
 
@@ -42,7 +42,7 @@ const Roadmap = () => {
                         />
                     </div>
 
-                    <div className="space-y-12">
+                    <div className="space-y-8 md:space-y-12">
                         {rounds.map((round, index) => {
                             const isEven = index % 2 === 0;
                             return (
@@ -52,14 +52,14 @@ const Roadmap = () => {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true, margin: "-100px" }}
                                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                                    className={`flex flex-col md:flex-row items-center gap-8 ${isEven ? 'md:flex-row-reverse' : ''}`}
+                                    className={`flex flex-col md:flex-row items-center gap-6 md:gap-8 ${isEven ? 'md:flex-row-reverse' : ''}`}
                                 >
                                     {/* Content Side */}
                                     <div className={`w-full md:w-[calc(50%-2rem)] pl-12 md:pl-0 ${isEven ? 'md:text-left' : 'md:text-right'}`}>
                                         <TiltCard className="inline-block w-full">
-                                            <div className="glass-card p-6 rounded-2xl border border-white/10 shadow-lg hover:shadow-green-500/20 transition-all bg-white/5 backdrop-blur-sm">
-                                                <h3 className="text-2xl font-bold text-gray-100 mb-1">{round.title}</h3>
-                                                <h4 className="text-lg font-semibold text-green-400 mb-2">{round.subtitle}</h4>
+                                            <div className="glass-card p-5 md:p-6 rounded-2xl border border-white/10 shadow-lg hover:shadow-green-500/20 transition-all bg-white/5 backdrop-blur-sm">
+                                                <h3 className="text-xl md:text-2xl font-bold text-gray-100 mb-1">{round.title}</h3>
+                                                <h4 className="text-base md:text-lg font-semibold text-green-400 mb-2">{round.subtitle}</h4>
                                                 <p className="text-gray-100 mb-1">{round.desc}</p>
                                                 {round.prize && (
                                                     <div className={`flex items-center gap-2 text-yellow-400 font-medium text-sm bg-yellow-400/10 px-3 py-1.5 rounded-lg w-fit border border-yellow-400/20 shadow-sm ${[2, 4].includes(round.id) ? 'ml-auto' : ''}`}>

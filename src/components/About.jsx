@@ -5,7 +5,7 @@ const About = () => {
     return (
         <section id="about" className="py-12 md:py-20 relative overflow-hidden bg-transparent">
             <div className="container mx-auto px-6 max-w-7xl">
-                <div className="grid md:grid-cols-2 gap-16 items-center">
+                <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
 
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
@@ -54,7 +54,7 @@ const About = () => {
                         <div className="absolute inset-0 bg-green-500 rounded-3xl rotate-6 transform translate-y-4 opacity-20 blur-xl"></div>
                         <div className="relative bg-[#0a0a0a] rounded-3xl p-8 shadow-2xl border border-green-500/30 overflow-hidden group">
 
-                            <h3 className="text-white text-3xl font-bold mb-8 flex items-center gap-3">
+                            <h3 className="text-white text-2xl md:text-3xl font-bold mb-8 flex items-center gap-3">
                                 <span className="p-2 bg-green-500 rounded-lg text-black"><Target size={24} /></span>
                                 Event Vision
                             </h3>

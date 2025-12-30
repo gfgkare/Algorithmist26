@@ -4,7 +4,7 @@ import TiltCard from './TiltCard';
 
 const RuleBook = () => {
     return (
-        <section className="py-16 md:py-24 relative overflow-hidden" id="rulebook">
+        <section className="py-12 md:py-24 relative overflow-hidden" id="rulebook">
             <div className="container mx-auto px-6 relative z-10">
                 {/* Section Header */}
                 <div className="text-center mb-20">
@@ -34,11 +34,11 @@ const RuleBook = () => {
                                     <BookOpen size={200} />
                                 </div>
                                 <div className="relative z-10">
-                                    <h3 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-6 flex items-center gap-3">
                                         <Scroll className="text-green-500" />
                                         Algorithmist’26
                                     </h3>
-                                    <p className="text-gray-300 text-lg leading-relaxed mb-6">
+                                    <p className="text-gray-300 text-base md:text-lg leading-relaxed mb-6">
                                         <span className="text-green-400 font-semibold">"Algorithmist’26"</span> is a coding event designed for students, with the goal of increasing coding culture in our college. The competition comprises five rounds, each progressively raising the bar in terms of complexity and challenge.
                                     </p>
                                     <div className="grid md:grid-cols-2 gap-6">
@@ -71,8 +71,8 @@ const RuleBook = () => {
                             transition={{ duration: 0.6, delay: 0.2 }}
                             className="h-full"
                         >
-                            <div className="glass-card p-8 rounded-3xl border border-white/10 h-full hover:border-green-500/30 transition-colors">
-                                <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+                            <div className="glass-card p-6 md:p-8 rounded-3xl border border-white/10 h-full hover:border-green-500/30 transition-colors">
+                                <h3 className="text-xl md:text-2xl font-bold text-white mb-8 flex items-center gap-3">
                                     <Ticket className="text-green-500" />
                                     Registration
                                 </h3>
@@ -83,7 +83,7 @@ const RuleBook = () => {
                                         </div>
                                         <div>
                                             <h4 className="font-semibold text-gray-200 mb-1">Eligibility</h4>
-                                            <p className="text-gray-400 text-sm">All II- and III-year students of CSE, IT; I and II years of MCA, M.Sc. CS, DS</p>
+                                            <p className="text-gray-400 text-sm">All II, III and IV-year students of CSE, IT; I and II years of MCA, M.Sc. CS, DS</p>
                                         </div>
                                     </li>
                                     <li className="flex gap-4">
@@ -116,8 +116,8 @@ const RuleBook = () => {
                             transition={{ duration: 0.6, delay: 0.2 }}
                             className="h-full"
                         >
-                            <div className="glass-card p-8 rounded-3xl border border-white/10 h-full hover:border-green-500/30 transition-colors">
-                                <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+                            <div className="glass-card p-6 md:p-8 rounded-3xl border border-white/10 h-full hover:border-green-500/30 transition-colors">
+                                <h3 className="text-xl md:text-2xl font-bold text-white mb-8 flex items-center gap-3">
                                     <ShieldAlert className="text-green-500" />
                                     General Information
                                 </h3>

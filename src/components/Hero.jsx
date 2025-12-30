@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Terminal, Award, Briefcase } from 'lucide-react';
+import { ArrowRight, Terminal, Award, Briefcase, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const ColorCycleText = ({ text }) => {
@@ -51,24 +51,21 @@ const Hero = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 text-sm font-semibold shadow-sm border border-green-100 bg-white/50 backdrop-blur-sm"
+                        className="flex flex-col items-center md:items-start gap-2 mb-6"
                     >
-                        <motion.span
-                            animate={{ opacity: [1, 0.4, 1] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                            className="w-2 h-2 rounded-full bg-green-500"
-                            style={{ background: 'var(--primary)' }}
-                        />
                         <motion.span
                             animate={{
                                 color: ["#4ade80", "#ffffff", "#4ade80"],
                                 textShadow: ["0 0 10px rgba(74, 222, 128, 0.5)", "0 0 0px rgba(74, 222, 128, 0)", "0 0 10px rgba(74, 222, 128, 0.5)"]
                             }}
                             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                            className="font-bold tracking-wide"
+                            className="font-bold tracking-wide text-lg md:text-3xl"
                         >
-                            GFG Campus Body KARE Presents
+                            GFG Campus Body KARE
                         </motion.span>
+                        <span className="text-gray-400 font-bold text-lg md:text-2xl">
+                            Presents
+                        </span>
                     </motion.div>
 
                     <h1 className="text-3xl md:text-7xl font-extrabold leading-tight mb-6 tracking-normal text-white">
@@ -109,25 +106,32 @@ const Hero = () => {
                         <h4 className="text-lg md:text-xl font-bold text-white mb-3 md:mb-4 flex items-center gap-2">
                             <span className="text-green-400">⚡</span> Important Event Details
                         </h4>
-                        <ul className="space-y-3 text-gray-200">
-                            <li className="flex items-start gap-3">
-                                <span className="bg-green-500/20 p-1 rounded text-green-400 mt-1">
-                                    <Award size={16} />
-                                </span>
-                                <span>
-                                    <strong className="text-green-400 block mb-1 text-sm md:text-base">2 Experimental Elective Credits</strong>
-                                    <span className="text-xs md:text-sm text-gray-400 leading-snug block">(Attending all the rounds is required to claim Credits)</span>
-                                </span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <span className="bg-green-500/20 p-1 rounded text-green-400">
-                                    <Briefcase size={16} />
-                                </span>
-                                <span className="text-sm md:text-lg">
-                                    Registration Fees : <strong className="text-white text-base md:text-xl">Rs 150 /-</strong>
-                                </span>
-                            </li>
-                        </ul>
+                        <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-4 text-gray-200 items-start text-left">
+                            {/* Item 1 */}
+                            <div className="bg-green-500/20 p-1 rounded text-green-400 mt-1">
+                                <User size={16} />
+                            </div>
+                            <div className="text-sm md:text-lg font-bold text-green-400 mt-1.5">
+                                Individual Participation
+                            </div>
+
+                            {/* Item 2 */}
+                            <div className="bg-green-500/20 p-1 rounded text-green-400 mt-1">
+                                <Award size={16} />
+                            </div>
+                            <div className="flex flex-col mt-1.5">
+                                <strong className="text-sm md:text-lg font-bold text-green-400">2 Experimental Elective Credits</strong>
+                                <span className="text-xs md:text-sm text-gray-400 leading-snug">(Attending all the rounds is required to claim Credits)</span>
+                            </div>
+
+                            {/* Item 3 */}
+                            <div className="bg-green-500/20 p-1 rounded text-green-400 mt-1">
+                                <Briefcase size={16} />
+                            </div>
+                            <div className="text-sm md:text-lg font-bold text-green-400 mt-1.5">
+                                Registration Fees : <strong className="text-sm md:text-lg text-gray-200">Rs 150 /-</strong>
+                            </div>
+                        </div>
                     </motion.div>
                 </motion.div>
 
