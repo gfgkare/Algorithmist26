@@ -1,0 +1,91 @@
+import { useRef } from 'react';
+import { motion, useScroll } from 'framer-motion';
+import { CheckCircle2, BookOpen, Presentation, Bug, Terminal } from 'lucide-react';
+import TiltCard from './TiltCard';
+
+const rounds = [
+    { id: 1, title: "Round 1", subtitle: "MCQ Questions", desc: "Test your logic and algorithmic knowledge with a series of challenging multiple-choice questions.", prize: "Prize: Top 30 Qualify for Next Round", prizeIcon: "🏆", icon: <CheckCircle2 size={24} /> },
+    { id: 2, title: "Round 2", subtitle: "Algo Seminars", desc: "Participate in interactive sessions to deepen your understanding of core algorithms.", prize: "Prize: GFG T-Shirt & Goodies + Merit Cert", prizeIcon: "👕", icon: <BookOpen size={24} /> },
+    { id: 3, title: "Round 3", subtitle: "Article Presentation", desc: "Research and present on the latest trends and breakthroughs in computer science.", prize: "Prize: Zebronics Keyboard & Mouse Combo", prizeIcon: "⌨️", icon: <Presentation size={24} /> },
+    { id: 4, title: "Round 4", subtitle: "Debugging", desc: "Find and fix the bugs in the provided code snippets within the time limit.", prize: "Prize: GFG Diary, Pen & Key Chain", prizeIcon: "🎁", icon: <Bug size={24} /> },
+    { id: 5, title: "Round 5", subtitle: "Coding", desc: "The ultimate coding showdown. Solve complex problems and prove your skills.", prize: "Prize: Cash Prizes worth ₹6000", prizeIcon: "💰", icon: <Terminal size={24} /> }
+];
+
+const Roadmap = () => {
+    const containerRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start end", "end end"]
+    });
+
+    return (
+        <section id="roadmap" className="py-24 relative overflow-hidden">
+            <div className="container mx-auto px-6 relative z-10" ref={containerRef}>
+                <div className="text-center mb-20">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <h2 className="text-4xl md:text-6xl font-black mb-4 tracking-normal">Event <span className="text-green-600">Roadmap</span></h2>
+                        <p className="text-xl text-gray-500">The journey to victory</p>
+                    </motion.div>
+                </div>
+
+                <div className="relative max-w-5xl mx-auto">
+                    {/* Vertical Line */}
+                    <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-white/5  md:-translate-x-1/2 rounded-full overflow-hidden">
+                        <motion.div
+                            className="w-full bg-gradient-to-b from-green-400 via-emerald-500 to-green-600 origin-top shadow-[0_0_20px_rgba(74,222,128,0.6)]"
+                            style={{ height: "100%", scaleY: scrollYProgress }}
+                        />
+                    </div>
+
+                    <div className="space-y-12">
+                        {rounds.map((round, index) => {
+                            const isEven = index % 2 === 0;
+                            return (
+                                <motion.div
+                                    key={round.id}
+                                    initial={{ opacity: 0, y: 50 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: "-100px" }}
+                                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                                    className={`flex flex-col md:flex-row items-center gap-8 ${isEven ? 'md:flex-row-reverse' : ''}`}
+                                >
+                                    {/* Content Side */}
+                                    <div className={`w-full md:w-[calc(50%-2rem)] pl-12 md:pl-0 ${isEven ? 'md:text-left' : 'md:text-right'}`}>
+                                        <TiltCard className="inline-block w-full">
+                                            <div className="glass-card p-6 rounded-2xl border border-white/10 shadow-lg hover:shadow-green-500/20 transition-all bg-white/5 backdrop-blur-sm">
+                                                <h3 className="text-2xl font-bold text-gray-100 mb-1">{round.title}</h3>
+                                                <h4 className="text-lg font-semibold text-green-400 mb-2">{round.subtitle}</h4>
+                                                <p className="text-gray-400 mb-4">{round.desc}</p>
+                                                <div className="flex items-center gap-2 text-yellow-400 font-medium text-sm bg-yellow-400/10 px-3 py-1.5 rounded-lg w-fit border border-yellow-400/20 shadow-sm">
+                                                    <span className="text-lg">{round.prizeIcon}</span>
+                                                    <span>{round.prize}</span>
+                                                </div>
+                                            </div>
+                                        </TiltCard>
+                                    </div>
+
+                                    {/* Center Node */}
+                                    <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-8 h-8 md:w-12 md:h-12 bg-white rounded-full border-4 border-green-500 z-10 shadow-md">
+                                        <div className="text-green-600 scale-75 md:scale-100">
+                                            {round.icon}
+                                        </div>
+                                    </div>
+
+                                    {/* Empty Side for alignment */}
+                                    <div className="hidden md:block w-[calc(50%-2rem)]" />
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default Roadmap;

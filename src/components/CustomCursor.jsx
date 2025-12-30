@@ -1,0 +1,52 @@
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+
+const CustomCursor = () => {
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [isHovering, setIsHovering] = useState(false);
+
+    useEffect(() => {
+        const updateMousePosition = (e) => {
+            setMousePosition({ x: e.clientX, y: e.clientY });
+        };
+
+        const handleMouseOver = (e) => {
+            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || e.target.closest('a') || e.target.closest('button')) {
+                setIsHovering(true);
+            } else {
+                setIsHovering(false);
+            }
+        };
+
+        window.addEventListener('mousemove', updateMousePosition);
+        window.addEventListener('mouseover', handleMouseOver);
+
+        return () => {
+            window.removeEventListener('mousemove', updateMousePosition);
+            window.removeEventListener('mouseover', handleMouseOver);
+        };
+    }, []);
+
+    return (
+        <motion.div
+            className="fixed top-0 left-0 w-8 h-8 rounded-full border-2 border-green-500 pointer-events-none z-[9999] mix-blend-difference hidden md:block"
+            animate={{
+                x: mousePosition.x - 16,
+                y: mousePosition.y - 16,
+                scale: isHovering ? 2.5 : 1,
+                borderColor: isHovering ? '#00E676' : '#00C853',
+                backgroundColor: isHovering ? 'rgba(0, 230, 118, 0.1)' : 'transparent'
+            }}
+            transition={{
+                type: "spring",
+                stiffness: 150,
+                damping: 15,
+                mass: 0.1
+            }}
+        >
+            <div className="absolute inset-0 bg-green-400 rounded-full blur-md opacity-20"></div>
+        </motion.div>
+    );
+};
+
+export default CustomCursor;
