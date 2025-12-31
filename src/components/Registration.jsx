@@ -396,7 +396,7 @@ const Registration = () => {
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                             className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white text-sm md:text-base focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
-                                            placeholder="yourname@klu.ac.in"
+                                            placeholder="your regno@klu.ac.in"
                                         />
                                     </div>
                                     {errors.email && <p className="text-red-500 text-xs mt-1 ml-1">{errors.email}</p>}
@@ -460,7 +460,6 @@ const Registration = () => {
                                             className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all appearance-none cursor-pointer"
                                         >
                                             <option value="" className="bg-gray-900 text-gray-500">Select Year</option>
-                                            <option value="1" className="bg-gray-900">1st Year</option>
                                             <option value="2" className="bg-gray-900">2nd Year</option>
                                             <option value="3" className="bg-gray-900">3rd Year</option>
                                             <option value="4" className="bg-gray-900">4th Year</option>
