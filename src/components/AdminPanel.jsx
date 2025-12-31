@@ -78,16 +78,19 @@ const AdminPanel = () => {
 
         const hasHostlers = filteredUsers.some(u => u.accommodation === 'hostler');
 
-        let headers = ["Name", "Registration Number", "Year", "Section", "Stream", "Phone", "Type"];
+        let headers = ["S.No", "Name", "Registration Number", "Email", "Gender", "Year", "Section", "Stream", "Phone", "Type"];
         if (hasHostlers) {
             headers = [...headers, "Hostel", "Room", "Warden Name", "Warden Phone"];
         }
         headers.push("Transaction ID", "Submitted At");
 
-        const csvRows = filteredUsers.map(user => {
+        const csvRows = filteredUsers.map((user, index) => {
             const row = [
+                index + 1,
                 user.name,
                 `"${user.regNo}"`,
+                user.email || '-',
+                user.gender || '-',
                 user.year,
                 user.section,
                 user.stream,
@@ -163,36 +166,38 @@ const AdminPanel = () => {
                 >
                     <h1 className="text-3xl font-bold text-white">Admin <span className="text-green-500">Dashboard</span></h1>
 
-                    <div className="flex gap-4 w-full md:w-auto">
-                        <div className="relative flex-1 md:w-64">
+                    <div className="flex flex-wrap gap-3 w-full md:w-auto justify-end">
+                        <div className="relative flex-grow md:w-64 min-w-[200px]">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                             <input
                                 type="text"
                                 placeholder="Search student..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:border-green-500"
+                                className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:border-green-500 text-sm md:text-base"
                             />
                         </div>
-                        <select
-                            value={filterType}
-                            onChange={(e) => setFilterType(e.target.value)}
-                            className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-green-500 cursor-pointer"
-                        >
-                            <option value="all" className="bg-gray-900">All Types</option>
-                            <option value="dayscholar" className="bg-gray-900">Day Scholar</option>
-                            <option value="hostler" className="bg-gray-900">Hostler</option>
-                        </select>
-                        <button onClick={fetchData} className="p-2 bg-white/10 rounded-lg hover:bg-white/20 text-white transition-colors" title="Refresh Data">
-                            <RefreshCw size={20} className={loading ? "animate-spin" : ""} />
-                        </button>
-                        <button
-                            onClick={handleExport}
-                            className="flex items-center gap-2 px-4 py-2 bg-green-500 text-black font-bold rounded-lg hover:bg-green-400 transition-colors"
-                        >
-                            <Download size={18} />
-                            <span className="hidden md:inline">Export CSV</span>
-                        </button>
+                        <div className="flex gap-2 w-full sm:w-auto justify-end">
+                            <select
+                                value={filterType}
+                                onChange={(e) => setFilterType(e.target.value)}
+                                className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-green-500 cursor-pointer text-sm"
+                            >
+                                <option value="all" className="bg-gray-900">All Types</option>
+                                <option value="dayscholar" className="bg-gray-900">Day Scholar</option>
+                                <option value="hostler" className="bg-gray-900">Hostler</option>
+                            </select>
+                            <button onClick={fetchData} className="p-2 bg-white/10 rounded-lg hover:bg-white/20 text-white transition-colors" title="Refresh Data">
+                                <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
+                            </button>
+                            <button
+                                onClick={handleExport}
+                                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-green-500 text-black font-bold rounded-lg hover:bg-green-400 transition-colors text-sm"
+                            >
+                                <Download size={16} />
+                                <span className="hidden sm:inline">Export</span>
+                            </button>
+                        </div>
                     </div>
                 </motion.div>
 
@@ -205,35 +210,41 @@ const AdminPanel = () => {
                     <table className="w-full text-left text-gray-300">
                         <thead className="bg-white/5 text-green-400 uppercase text-xs">
                             <tr>
-                                <th className="px-6 py-4">Name</th>
-                                <th className="px-6 py-4">Reg No</th>
-                                <th className="px-6 py-4">Year</th>
-                                <th className="px-6 py-4">Section</th>
-                                <th className="px-6 py-4">Stream</th>
-                                <th className="px-6 py-4">Phone</th>
-                                <th className="px-6 py-4">Type</th>
-                                <th className="px-6 py-4">Hostel</th>
-                                <th className="px-6 py-4">Room</th>
-                                <th className="px-6 py-4">Warden</th>
-                                <th className="px-6 py-4">Transaction ID</th>
-                                <th className="px-6 py-4 text-center">Screenshot</th>
+                                <th className="px-3 md:px-6 py-4">S.No</th>
+                                <th className="px-3 md:px-6 py-4">Name</th>
+                                <th className="px-3 md:px-6 py-4">Reg No</th>
+                                <th className="px-3 md:px-6 py-4">Email</th>
+                                <th className="px-3 md:px-6 py-4">Gender</th>
+                                <th className="px-3 md:px-6 py-4">Year</th>
+                                <th className="px-3 md:px-6 py-4">Section</th>
+                                <th className="px-3 md:px-6 py-4">Stream</th>
+                                <th className="px-3 md:px-6 py-4">Phone</th>
+                                <th className="px-3 md:px-6 py-4">Type</th>
+                                <th className="px-3 md:px-6 py-4">Hostel</th>
+                                <th className="px-3 md:px-6 py-4">Room</th>
+                                <th className="px-3 md:px-6 py-4">Warden</th>
+                                <th className="px-3 md:px-6 py-4">Transaction ID</th>
+                                <th className="px-3 md:px-6 py-4 text-center">Screenshot</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                            {filteredUsers.map((user) => (
+                            {filteredUsers.map((user, index) => (
                                 <tr key={user.id} className="hover:bg-white/5 transition-colors">
-                                    <td className="px-6 py-4 font-medium text-white">{user.name}</td>
-                                    <td className="px-6 py-4">{user.regNo}</td>
-                                    <td className="px-6 py-4">{user.year}</td>
-                                    <td className="px-6 py-4">{user.section}</td>
-                                    <td className="px-6 py-4">{user.stream}</td>
-                                    <td className="px-6 py-4">{user.phone}</td>
-                                    <td className="px-6 py-4 capitalize">
+                                    <td className="px-3 md:px-6 py-4 font-bold text-green-500/80">{index + 1}</td>
+                                    <td className="px-3 md:px-6 py-4 font-medium text-white">{user.name}</td>
+                                    <td className="px-3 md:px-6 py-4">{user.regNo}</td>
+                                    <td className="px-3 md:px-6 py-4 text-xs">{user.email || '-'}</td>
+                                    <td className="px-3 md:px-6 py-4 text-xs">{user.gender || '-'}</td>
+                                    <td className="px-3 md:px-6 py-4">{user.year}</td>
+                                    <td className="px-3 md:px-6 py-4">{user.section}</td>
+                                    <td className="px-3 md:px-6 py-4">{user.stream}</td>
+                                    <td className="px-3 md:px-6 py-4">{user.phone}</td>
+                                    <td className="px-3 md:px-6 py-4 capitalize">
                                         {user.accommodation === 'dayscholar' ? 'Day Scholar' : (user.accommodation || 'N/A')}
                                     </td>
-                                    <td className="px-6 py-4">{user.accommodation === 'hostler' ? user.hostelName : '-'}</td>
-                                    <td className="px-6 py-4">{user.accommodation === 'hostler' ? user.roomNo : '-'}</td>
-                                    <td className="px-6 py-4 text-xs">
+                                    <td className="px-3 md:px-6 py-4">{user.accommodation === 'hostler' ? user.hostelName : '-'}</td>
+                                    <td className="px-3 md:px-6 py-4">{user.accommodation === 'hostler' ? user.roomNo : '-'}</td>
+                                    <td className="px-3 md:px-6 py-4 text-xs">
                                         {user.accommodation === 'hostler' ? (
                                             <>
                                                 <div className="text-white">{user.wardenName}</div>
@@ -241,8 +252,8 @@ const AdminPanel = () => {
                                             </>
                                         ) : '-'}
                                     </td>
-                                    <td className="px-6 py-4 font-mono text-sm">{user.transactionId}</td>
-                                    <td className="px-6 py-4 text-center">
+                                    <td className="px-3 md:px-6 py-4 font-mono text-sm">{user.transactionId}</td>
+                                    <td className="px-3 md:px-6 py-4 text-center">
                                         <button
                                             onClick={() => viewScreenshot(user.id)}
                                             className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs hover:bg-green-500 hover:text-black transition-colors flex items-center justify-center gap-1 mx-auto"
@@ -254,7 +265,7 @@ const AdminPanel = () => {
                             ))}
                             {filteredUsers.length === 0 && !loading && (
                                 <tr className="text-center">
-                                    <td colSpan="6" className="py-8 text-gray-500">No registrations found</td>
+                                    <td colSpan="13" className="py-8 text-gray-500">No registrations found</td>
                                 </tr>
                             )}
                         </tbody>

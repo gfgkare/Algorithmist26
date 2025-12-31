@@ -4,7 +4,7 @@ import { User, Book, Hash, Phone, MapPin, Building, Home, ArrowLeft, CreditCard,
 import { Link, useNavigate } from 'react-router-dom';
 import TiltCard from './TiltCard';
 
-import { collection, addDoc, doc, setDoc, query, where, getDocs } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, query, where, getDocs, runTransaction } from "firebase/firestore";
 import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../firebase";
 
@@ -14,6 +14,8 @@ const Registration = () => {
     const [formData, setFormData] = useState({
         name: '',
         regNo: '',
+        email: '',
+        gender: '',
         section: '',
         year: '',
         stream: '',
@@ -27,6 +29,22 @@ const Registration = () => {
         transactionId: '',
         screenshot: null
     });
+    const [errors, setErrors] = useState({
+        name: '',
+        regNo: '',
+        email: '',
+        gender: '',
+        section: '',
+        year: '',
+        stream: '',
+        phone: '',
+        hostelName: '',
+        roomNo: '',
+        wardenName: '',
+        wardenPhone: '',
+        transactionId: '',
+        screenshot: ''
+    });
 
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
@@ -35,12 +53,79 @@ const Registration = () => {
                 ...prev,
                 [name]: files[0]
             }));
+            // Clear error when file is selected
+            setErrors(prev => ({ ...prev, [name]: '' }));
         } else {
             setFormData(prev => ({
                 ...prev,
                 [name]: value
             }));
+            // Clear required error as user types
+            if (value.trim()) {
+                setErrors(prev => ({ ...prev, [name]: '' }));
+            }
         }
+    };
+
+    const handleBlur = async (e) => {
+        const { name, value } = e.target;
+        let errorMsg = '';
+
+        // Required Check
+        if (!value || (typeof value === 'string' && !value.trim())) {
+            errorMsg = "This field is required";
+        }
+
+        if (name === 'email' && value) {
+            if (!value.toLowerCase().endsWith('@klu.ac.in')) {
+                errorMsg = "Use official KLU email ID (@klu.ac.in)";
+            } else {
+                // Check for duplicate email
+                try {
+                    const registrationsRef = collection(db, 'registrations');
+                    const q = query(registrationsRef, where("email", "==", value.toLowerCase()));
+                    const querySnapshot = await getDocs(q);
+                    if (!querySnapshot.empty) {
+                        errorMsg = "This Email ID is already registered!";
+                    }
+                } catch (error) {
+                    console.error("Error checking email:", error);
+                }
+            }
+        }
+        if ((name === 'phone' || name === 'wardenPhone') && value) {
+            if (!/^[0-9]{10}$/.test(value)) {
+                errorMsg = "Enter a valid 10-digit number";
+            }
+        }
+        if (name === 'transactionId' && value) {
+            try {
+                const paymentsRef = collection(db, 'payments');
+                const q = query(paymentsRef, where("transactionId", "==", value));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    errorMsg = "This Transaction ID has already been used!";
+                }
+            } catch (error) {
+                console.error("Error checking transaction ID:", error);
+            }
+        }
+        if (name === 'regNo' && value) {
+            try {
+                const registrationsRef = collection(db, 'registrations');
+                const q = query(registrationsRef, where("regNo", "==", value));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    errorMsg = "This Registration Number is already registered!";
+                }
+            } catch (error) {
+                console.error("Error checking registration number:", error);
+            }
+        }
+        setErrors(prev => ({
+            ...prev,
+            [name]: errorMsg
+        }));
     };
 
     // Helper to compress image and convert to base64
@@ -53,7 +138,7 @@ const Registration = () => {
                 img.src = event.target.result;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 1200; // Better quality for screenshots
+                    const MAX_WIDTH = 800; // Optimized for speed and readability
                     let width = img.width;
                     let height = img.height;
 
@@ -66,7 +151,7 @@ const Registration = () => {
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.7)); // 70% quality balanced for readablity
+                    resolve(canvas.toDataURL('image/jpeg', 0.6)); // 60% quality for faster upload
                 };
             };
             reader.onerror = error => reject(error);
@@ -77,43 +162,105 @@ const Registration = () => {
         e.preventDefault();
         setIsSubmitting(true);
 
+        // Perform final validation
+        const newErrors = {};
+        const requiredFields = ['name', 'regNo', 'email', 'gender', 'section', 'year', 'stream', 'phone', 'transactionId'];
+        if (formData.accommodation === 'hostler') {
+            requiredFields.push('hostelName', 'roomNo', 'wardenName', 'wardenPhone');
+        }
+
+        requiredFields.forEach(field => {
+            if (!formData[field] || (typeof formData[field] === 'string' && !formData[field].trim())) {
+                newErrors[field] = "This field is required";
+            }
+        });
+
+        if (!formData.screenshot) {
+            newErrors.screenshot = "Please upload the payment screenshot!";
+        }
+
+        // Check if any errors already existed from blur events
+        const hasExistingErrors = Object.values(errors).some(err => err !== '');
+
+        if (Object.keys(newErrors).length > 0 || hasExistingErrors) {
+            setErrors(prev => ({ ...prev, ...newErrors }));
+            setIsSubmitting(false);
+            // Scroll to first error
+            const firstErrorField = Object.keys(newErrors)[0] || Object.keys(errors).find(k => errors[k]);
+            const element = document.getElementsByName(firstErrorField)[0];
+            if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
         try {
-            if (!formData.screenshot) {
-                alert("Please upload the payment screenshot!");
+            // 1. Strict Domain Re-verification
+            if (!formData.email.toLowerCase().endsWith('@klu.ac.in')) {
+                setErrors(prev => ({ ...prev, email: "Use official KLU email (@klu.ac.in)" }));
                 setIsSubmitting(false);
                 return;
             }
 
-            // Check for duplicate registration
-            const registrationsRef = collection(db, 'registrations');
-            const q = query(registrationsRef, where("regNo", "==", formData.regNo));
-            const querySnapshot = await getDocs(q);
-
-            if (!querySnapshot.empty) {
-                alert("This Registration Number is already registered!");
-                setIsSubmitting(false);
-                return;
-            }
-
-            // 1. Prepare Data (CRITICAL: Remove raw File object which causes Firestore errors)
+            // 2. Prepare Data & Compress Image FIRST (Outside Transaction for Speed)
+            const base64Image = await compressImage(formData.screenshot);
             const { screenshot, ...restOfData } = formData;
+            const registrationId = formData.regNo.toUpperCase().trim();
+            const transactionDocId = formData.transactionId.toUpperCase().trim();
+
             const userData = {
                 ...restOfData,
                 screenshotStatus: 'Uploaded',
                 submittedAt: new Date().toISOString()
             };
 
-            // 2. Save to Firestore 'registrations' (ref already defined above)
-            const docRef = await addDoc(registrationsRef, userData);
+            // 3. BROAD SEARCH (Check ALL existing records regardless of ID format)
+            const submissionErrors = {};
+            const registrationsRef = collection(db, 'registrations');
+            const paymentsRef = collection(db, 'payments');
 
-            // 3. Compress and Save Screenshot to 'payments' with SAME ID
-            const base64Image = await compressImage(formData.screenshot);
-            await setDoc(doc(db, 'payments', docRef.id), {
-                transactionId: formData.transactionId,
-                regNo: formData.regNo,
-                screenshot: base64Image,
-                linkedRegistrationId: docRef.id,
-                submittedAt: new Date().toISOString()
+            const [emailSnap, regNoSnap, transSnap] = await Promise.all([
+                getDocs(query(registrationsRef, where("email", "==", formData.email.toLowerCase()))),
+                getDocs(query(registrationsRef, where("regNo", "==", formData.regNo))),
+                getDocs(query(paymentsRef, where("transactionId", "==", formData.transactionId)))
+            ]);
+
+            if (!emailSnap.empty) submissionErrors.email = "This Email ID is already registered!";
+            if (!regNoSnap.empty) submissionErrors.regNo = "This Registration Number is already registered!";
+            if (!transSnap.empty) submissionErrors.transactionId = "This Transaction ID has already been used!";
+
+            if (Object.keys(submissionErrors).length > 0) {
+                setErrors(prev => ({ ...prev, ...submissionErrors }));
+                setIsSubmitting(false);
+                const firstErrorField = Object.keys(submissionErrors)[0];
+                const element = document.getElementsByName(firstErrorField)[0];
+                if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            // 4. ATOMIC LOCK (Prevent same-millisecond collisions)
+            await runTransaction(db, async (transaction) => {
+                const regDocRef = doc(db, 'registrations', registrationId);
+                const payDocRef = doc(db, 'payments', transactionDocId);
+
+                const regSnapTx = await transaction.get(regDocRef);
+                const paySnapTx = await transaction.get(payDocRef);
+
+                if (regSnapTx.exists() || paySnapTx.exists()) {
+                    throw {
+                        type: 'validation', errors: {
+                            regNo: regSnapTx.exists() ? "Collision detected! Please wait." : "",
+                            transactionId: paySnapTx.exists() ? "Collision detected! Please wait." : ""
+                        }
+                    };
+                }
+
+                transaction.set(regDocRef, userData);
+                transaction.set(payDocRef, {
+                    transactionId: formData.transactionId,
+                    regNo: formData.regNo,
+                    screenshot: base64Image,
+                    linkedRegistrationId: registrationId,
+                    submittedAt: new Date().toISOString()
+                });
             });
 
             alert("Registration Successful!");
@@ -121,6 +268,8 @@ const Registration = () => {
             setFormData({
                 name: '',
                 regNo: '',
+                email: '',
+                gender: '',
                 section: '',
                 year: '',
                 stream: '',
@@ -129,13 +278,21 @@ const Registration = () => {
                 hostelName: '',
                 roomNo: '',
                 wardenName: '',
+                wardenPhone: '',
                 transactionId: '',
                 screenshot: null
             });
 
         } catch (error) {
             console.error("Error submitting registration:", error);
-            alert("Registration Failed: " + error.message);
+            if (error.type === 'validation') {
+                setErrors(prev => ({ ...prev, ...error.errors }));
+                const firstErrorField = Object.keys(error.errors)[0];
+                const element = document.getElementsByName(firstErrorField)[0];
+                if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                alert("Registration Failed! check the details carefully!" + (error.message || ''));
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -165,14 +322,14 @@ const Registration = () => {
                     <p className="text-gray-400 text-sm md:text-base">Join the Algorithmist'26 Challenge</p>
                 </div>
 
-                <div className="glass-card p-6 md:p-10 rounded-3xl border border-white/10 shadow-2xl bg-black/40 backdrop-blur-xl relative overflow-hidden">
+                <div className="glass-card p-5 md:p-10 rounded-3xl border border-white/10 shadow-2xl bg-black/40 backdrop-blur-xl relative overflow-hidden">
 
                     {/* Compact Important Note */}
                     <div className="mb-8 p-4 rounded-xl bg-black/40 border border-red-500/20 flex items-center gap-3 backdrop-blur-sm">
                         <div className="text-red-500 shrink-0">
                             <AlertTriangle size={18} />
                         </div>
-                        <p className="text-gray-300 text-[11px] md:text-xs leading-relaxed">
+                        <p className="text-gray-300 text-[12px] md:text-xs leading-relaxed">
                             <span className="text-red-500 font-bold mr-1 uppercase tracking-wider">Note:</span>
                             Ensure all details are <span className="text-white font-semibold">accurate</span> before submission. Once registered, details <span className="text-red-400 font-semibold underline">cannot be modified</span> and will be used for <span className="text-white font-semibold underline italic">CERTIFICATES & CREDITS</span>.
                         </p>
@@ -197,10 +354,12 @@ const Registration = () => {
                                             required
                                             value={formData.name}
                                             onChange={handleChange}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white text-sm md:text-base focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
+                                            onBlur={handleBlur}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white text-sm md:text-base focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                             placeholder="Name(as per SIS login)"
                                         />
                                     </div>
+                                    {errors.name && <p className="text-red-500 text-xs mt-1 ml-1">{errors.name}</p>}
                                 </div>
 
                                 <div className="space-y-2">
@@ -215,10 +374,55 @@ const Registration = () => {
                                             required
                                             value={formData.regNo}
                                             onChange={handleChange}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white text-sm md:text-base focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
+                                            onBlur={handleBlur}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white text-sm md:text-base focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                             placeholder="Enter Reg No"
                                         />
                                     </div>
+                                    {errors.regNo && <p className="text-red-500 text-xs mt-1 ml-1">{errors.regNo}</p>}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm text-gray-400 ml-1">Official Email ID</label>
+                                    <div className="relative">
+                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500">
+                                            <CreditCard size={18} />
+                                        </div>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            required
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white text-sm md:text-base focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
+                                            placeholder="yourname@klu.ac.in"
+                                        />
+                                    </div>
+                                    {errors.email && <p className="text-red-500 text-xs mt-1 ml-1">{errors.email}</p>}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm text-gray-400 ml-1">Gender</label>
+                                    <div className="relative">
+                                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500">
+                                            <User size={18} />
+                                        </div>
+                                        <select
+                                            name="gender"
+                                            required
+                                            value={formData.gender}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all appearance-none cursor-pointer"
+                                        >
+                                            <option value="" className="bg-gray-900 text-gray-500">Select Gender</option>
+                                            <option value="Male" className="bg-gray-900">Male</option>
+                                            <option value="Female" className="bg-gray-900">Female</option>
+                                            <option value="Other" className="bg-gray-900">Other</option>
+                                        </select>
+                                    </div>
+                                    {errors.gender && <p className="text-red-500 text-xs mt-1 ml-1">{errors.gender}</p>}
                                 </div>
 
                                 <div className="space-y-2">
@@ -233,10 +437,12 @@ const Registration = () => {
                                             required
                                             value={formData.section}
                                             onChange={handleChange}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
+                                            onBlur={handleBlur}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                             placeholder="Enter Section"
                                         />
                                     </div>
+                                    {errors.section && <p className="text-red-500 text-xs mt-1 ml-1">{errors.section}</p>}
                                 </div>
 
                                 <div className="space-y-2">
@@ -250,7 +456,8 @@ const Registration = () => {
                                             required
                                             value={formData.year}
                                             onChange={handleChange}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all appearance-none cursor-pointer"
+                                            onBlur={handleBlur}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all appearance-none cursor-pointer"
                                         >
                                             <option value="" className="bg-gray-900 text-gray-500">Select Year</option>
                                             <option value="1" className="bg-gray-900">1st Year</option>
@@ -259,6 +466,7 @@ const Registration = () => {
                                             <option value="4" className="bg-gray-900">4th Year</option>
                                         </select>
                                     </div>
+                                    {errors.year && <p className="text-red-500 text-xs mt-1 ml-1">{errors.year}</p>}
                                 </div>
 
                                 <div className="space-y-2">
@@ -273,10 +481,12 @@ const Registration = () => {
                                             required
                                             value={formData.stream}
                                             onChange={handleChange}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
+                                            onBlur={handleBlur}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                             placeholder="Enter Stream/Branch"
                                         />
                                     </div>
+                                    {errors.stream && <p className="text-red-500 text-xs mt-1 ml-1">{errors.stream}</p>}
                                 </div>
 
                                 <div className="space-y-2 md:col-span-2">
@@ -294,10 +504,12 @@ const Registration = () => {
                                             maxLength={10}
                                             value={formData.phone}
                                             onChange={handleChange}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
+                                            onBlur={handleBlur}
+                                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                             placeholder="10 digit mobile number"
                                         />
                                     </div>
+                                    {errors.phone && <p className="text-red-500 text-xs mt-1 ml-1">{errors.phone}</p>}
                                 </div>
                             </div>
                         </div>
@@ -362,7 +574,8 @@ const Registration = () => {
                                                     required
                                                     value={formData.hostelName}
                                                     onChange={handleChange}
-                                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all appearance-none cursor-pointer"
+                                                    onBlur={handleBlur}
+                                                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all appearance-none cursor-pointer"
                                                 >
                                                     <option value="" className="bg-gray-900 text-gray-500">Select Hostel</option>
                                                     <option value="MH-1" className="bg-gray-900">MH-1</option>
@@ -378,6 +591,7 @@ const Registration = () => {
 
                                                 </select>
                                             </div>
+                                            {errors.hostelName && <p className="text-red-500 text-xs mt-1 ml-1">{errors.hostelName}</p>}
                                         </div>
 
                                         <div className="space-y-2">
@@ -392,10 +606,12 @@ const Registration = () => {
                                                     required
                                                     value={formData.roomNo}
                                                     onChange={handleChange}
-                                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
+                                                    onBlur={handleBlur}
+                                                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                                     placeholder="Enter Room Number"
                                                 />
                                             </div>
+                                            {errors.roomNo && <p className="text-red-500 text-xs mt-1 ml-1">{errors.roomNo}</p>}
                                         </div>
 
                                         <div className="space-y-2">
@@ -410,10 +626,12 @@ const Registration = () => {
                                                     required
                                                     value={formData.wardenName}
                                                     onChange={handleChange}
+                                                    onBlur={handleBlur}
                                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                                     placeholder="Enter Warden's Name"
                                                 />
                                             </div>
+                                            {errors.wardenName && <p className="text-red-500 text-xs mt-1 ml-1">{errors.wardenName}</p>}
                                         </div>
 
                                         <div className="space-y-2">
@@ -431,10 +649,12 @@ const Registration = () => {
                                                     maxLength={10}
                                                     value={formData.wardenPhone}
                                                     onChange={handleChange}
+                                                    onBlur={handleBlur}
                                                     className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                                     placeholder="10 digit mobile number"
                                                 />
                                             </div>
+                                            {errors.wardenPhone && <p className="text-red-500 text-xs mt-1 ml-1">{errors.wardenPhone}</p>}
                                         </div>
                                     </motion.div>
                                 )}
@@ -467,10 +687,12 @@ const Registration = () => {
                                             required
                                             value={formData.transactionId}
                                             onChange={handleChange}
+                                            onBlur={handleBlur}
                                             className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                             placeholder="Enter Transaction ID"
                                         />
                                     </div>
+                                    {errors.transactionId && <p className="text-red-500 text-xs mt-1 ml-1">{errors.transactionId}</p>}
                                 </div>
 
                                 <div className="space-y-2">
@@ -488,6 +710,7 @@ const Registration = () => {
                                             className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-2.5 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-500 file:text-black hover:file:bg-green-400 cursor-pointer text-sm"
                                         />
                                     </div>
+                                    {errors.screenshot && <p className="text-red-500 text-xs mt-1 ml-1">{errors.screenshot}</p>}
                                 </div>
                             </div>
                         </div>
