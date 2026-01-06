@@ -39,7 +39,7 @@ const RuleBook = () => {
                                         Algorithmist<span className="text-green-500">’26</span>
                                     </h3>
                                     <p className="text-gray-300 text-base md:text-lg leading-relaxed mb-6">
-                                        <span className="text-white font-semibold">"Algorithmist</span> <span className="text-green-400 font-semibold">’26"</span> is a coding event designed for students, with the goal of increasing coding culture in our college. The competition comprises five rounds, each progressively raising the bar in terms of complexity and challenge.
+                                        <span className="text-white font-semibold">"Algorithmist</span> <span className="text-green-400 font-semibold">’26"</span> is a coding event designed for students, with the goal of increasing coding culture in our college. The competition comprises five rounds.
                                     </p>
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div className="bg-white/5 p-4 rounded-xl border border-white/10">

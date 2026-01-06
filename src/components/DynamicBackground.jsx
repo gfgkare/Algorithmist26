@@ -55,9 +55,9 @@ const DynamicBackground = () => {
                 <div className="w-full h-full bg-gradient-to-tr from-emerald-900/20 to-green-900/10 rounded-full" />
             </motion.div>
 
-            {/* 3. Floating Particles (Bright Green for Contrast) - Reduced Count for Performance */}
+            {/* 3. Floating Particles (Optimized count for mobile performance) */}
             <div className="absolute inset-0">
-                {[...Array(15)].map((_, i) => (
+                {[...Array(window.innerWidth < 768 ? 6 : 15)].map((_, i) => (
                     <motion.div
                         key={i}
                         className="absolute bg-green-400 rounded-full opacity-60"

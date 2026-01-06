@@ -34,8 +34,8 @@ const AdminPanel = () => {
                 ...docSnapshot.data()
             }));
 
-            // Sort by latest first
-            setRegistrations(data.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)));
+            // Sort by earliest first (First registrations on top)
+            setRegistrations(data.sort((a, b) => new Date(a.submittedAt) - new Date(b.submittedAt)));
         } catch (error) {
             console.error("Error fetching data:", error);
             alert("Error fetching data");
@@ -43,18 +43,30 @@ const AdminPanel = () => {
         setLoading(false);
     };
 
-    const viewScreenshot = async (userId) => {
+    const viewScreenshot = async (user) => {
+        // 1. Check if image is already in current user object
+        const image = user.screenshot || user.screenshotURL;
+        if (image) {
+            setSelectedImage(image);
+            return;
+        }
+
+        // 2. Fallback: Fetch from payments collection using transactionId
         setLoading(true);
         try {
-            const paymentDoc = await getDoc(doc(db, 'payments', userId));
+            const tid = user.transactionId?.toUpperCase().trim();
+            if (!tid) throw new Error("No Transaction ID provided");
+
+            const paymentDoc = await getDoc(doc(db, 'payments', tid));
             if (paymentDoc.exists()) {
-                setSelectedImage(paymentDoc.data().screenshot);
+                const payData = paymentDoc.data();
+                setSelectedImage(payData.screenshot || payData.screenshotURL);
             } else {
-                alert("Screenshot not found!");
+                alert("Screenshot not found in database!");
             }
         } catch (err) {
             console.error("Error fetching payment:", err);
-            alert("Failed to load image");
+            alert("Failed to load image: " + err.message);
         } finally {
             setLoading(false);
         }
@@ -255,7 +267,7 @@ const AdminPanel = () => {
                                     <td className="px-3 md:px-6 py-4 font-mono text-sm">{user.transactionId}</td>
                                     <td className="px-3 md:px-6 py-4 text-center">
                                         <button
-                                            onClick={() => viewScreenshot(user.id)}
+                                            onClick={() => viewScreenshot(user)}
                                             className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs hover:bg-green-500 hover:text-black transition-colors flex items-center justify-center gap-1 mx-auto"
                                         >
                                             <Eye size={14} /> View

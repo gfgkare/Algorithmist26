@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { User, Book, Hash, Phone, MapPin, Building, Home, ArrowLeft, CreditCard, Upload, Image as ImageIcon, Users, AlertTriangle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,6 +11,7 @@ import { db, storage } from "../firebase";
 const Registration = () => {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [registrationStatus, setRegistrationStatus] = useState(''); // New: Status tracking
     const [formData, setFormData] = useState({
         name: '',
         regNo: '',
@@ -138,7 +139,7 @@ const Registration = () => {
                 img.src = event.target.result;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800; // Optimized for speed and readability
+                    const MAX_WIDTH = 600; // Smaller width for much faster uploads
                     let width = img.width;
                     let height = img.height;
 
@@ -151,7 +152,7 @@ const Registration = () => {
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.6)); // 60% quality for faster upload
+                    resolve(canvas.toDataURL('image/jpeg', 0.45)); // 45% quality - optimal balance for speed & readability
                 };
             };
             reader.onerror = error => reject(error);
@@ -201,18 +202,16 @@ const Registration = () => {
             }
 
             // 2. Prepare Data & Compress Image FIRST (Outside Transaction for Speed)
+            setRegistrationStatus('Optimizing Image...');
             const base64Image = await compressImage(formData.screenshot);
-            const { screenshot, ...restOfData } = formData;
             const registrationId = formData.regNo.toUpperCase().trim();
             const transactionDocId = formData.transactionId.toUpperCase().trim();
 
-            const userData = {
-                ...restOfData,
-                screenshotStatus: 'Uploaded',
-                submittedAt: new Date().toISOString()
-            };
+            setRegistrationStatus('Verifying Data...');
+            const { screenshot, ...restOfData } = formData;
+            const submittedAt = new Date().toISOString();
 
-            // 3. BROAD SEARCH (Check ALL existing records regardless of ID format)
+            // 3. BROAD SEARCH (Duplicate Prevention)
             const submissionErrors = {};
             const registrationsRef = collection(db, 'registrations');
             const paymentsRef = collection(db, 'payments');
@@ -236,7 +235,8 @@ const Registration = () => {
                 return;
             }
 
-            // 4. ATOMIC LOCK (Prevent same-millisecond collisions)
+            // 4. ATOMIC LOCK & DB WRITE
+            setRegistrationStatus('Finalizing...');
             await runTransaction(db, async (transaction) => {
                 const regDocRef = doc(db, 'registrations', registrationId);
                 const payDocRef = doc(db, 'payments', transactionDocId);
@@ -253,13 +253,18 @@ const Registration = () => {
                     };
                 }
 
-                transaction.set(regDocRef, userData);
+                transaction.set(regDocRef, {
+                    ...restOfData,
+                    screenshot: base64Image,
+                    submittedAt
+                });
+
                 transaction.set(payDocRef, {
                     transactionId: formData.transactionId,
                     regNo: formData.regNo,
                     screenshot: base64Image,
                     linkedRegistrationId: registrationId,
-                    submittedAt: new Date().toISOString()
+                    submittedAt
                 });
             });
 
@@ -316,13 +321,13 @@ const Registration = () => {
                 className="w-full max-w-3xl relative z-10"
             >
                 <div className="text-center mb-6 md:mb-10">
-                    <h2 className="text-2xl md:text-5xl font-black mb-2 tracking-normal text-white leading-tight">
+                    <h2 className="text-2xl md:text-5xl font-black mb-2 tracking-tight text-white leading-tight">
                         Participant <span className="text-green-500">Registration</span>
                     </h2>
-                    <p className="text-gray-400 text-sm md:text-base">Join the Algorithmist'26 Challenge</p>
+                    <p className="text-gray-400 text-[10px] md:text-base px-4 uppercase tracking-widest opacity-70">Join the Algorithmist'26 Challenge</p>
                 </div>
 
-                <div className="glass-card p-5 md:p-10 rounded-3xl border border-white/10 shadow-2xl bg-black/40 backdrop-blur-xl relative overflow-hidden">
+                <div className="glass-card p-5 md:p-10 rounded-2xl md:rounded-3xl border border-white/10 shadow-2xl bg-black/40 backdrop-blur-xl relative overflow-hidden">
 
                     {/* Compact Important Note */}
                     <div className="mb-8 p-4 rounded-xl bg-black/40 border border-red-500/20 flex items-center gap-3 backdrop-blur-sm">
@@ -335,7 +340,7 @@ const Registration = () => {
                         </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-8">
+                    <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
 
                         {/* Personal Details Section */}
                         <div className="space-y-4">
@@ -460,6 +465,7 @@ const Registration = () => {
                                             className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all appearance-none cursor-pointer"
                                         >
                                             <option value="" className="bg-gray-900 text-gray-500">Select Year</option>
+                                            <option value="1" className="bg-gray-900">1st Year</option>
                                             <option value="2" className="bg-gray-900">2nd Year</option>
                                             <option value="3" className="bg-gray-900">3rd Year</option>
                                             <option value="4" className="bg-gray-900">4th Year</option>
@@ -565,7 +571,7 @@ const Registration = () => {
                                         <div className="space-y-2">
                                             <label className="text-sm text-gray-400 ml-1">Hostel Name</label>
                                             <div className="relative">
-                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500">
+                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500 pointer-events-none">
                                                     <Building size={18} />
                                                 </div>
                                                 <select
@@ -574,19 +580,17 @@ const Registration = () => {
                                                     value={formData.hostelName}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all appearance-none cursor-pointer"
+                                                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-4 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all appearance-none cursor-pointer text-base md:text-sm"
                                                 >
                                                     <option value="" className="bg-gray-900 text-gray-500">Select Hostel</option>
                                                     <option value="MH-1" className="bg-gray-900">MH-1</option>
                                                     <option value="MH-2" className="bg-gray-900">MH-2</option>
                                                     <option value="MH-3" className="bg-gray-900">MH-3</option>
                                                     <option value="MH-6" className="bg-gray-900">MH-6</option>
-                                                    <option value="MH-7" className="bg-gray-900">MH-7</option>
                                                     <option value="PG" className="bg-gray-900">PG</option>
                                                     <option value="LH-2" className="bg-gray-900">LH-2</option>
                                                     <option value="LH-3" className="bg-gray-900">LH-3</option>
                                                     <option value="LH-4" className="bg-gray-900">LH-4</option>
-                                                    <option value="LH-5" className="bg-gray-900">LH-5</option>
 
                                                 </select>
                                             </div>
@@ -596,7 +600,7 @@ const Registration = () => {
                                         <div className="space-y-2">
                                             <label className="text-sm text-gray-400 ml-1">Room Number</label>
                                             <div className="relative">
-                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500">
+                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500 pointer-events-none">
                                                     <Home size={18} />
                                                 </div>
                                                 <input
@@ -606,7 +610,7 @@ const Registration = () => {
                                                     value={formData.roomNo}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
+                                                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-4 text-white text-base md:text-sm focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                                     placeholder="Enter Room Number"
                                                 />
                                             </div>
@@ -616,7 +620,7 @@ const Registration = () => {
                                         <div className="space-y-2">
                                             <label className="text-sm text-gray-400 ml-1">Warden Name</label>
                                             <div className="relative">
-                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500">
+                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500 pointer-events-none">
                                                     <User size={18} />
                                                 </div>
                                                 <input
@@ -626,7 +630,7 @@ const Registration = () => {
                                                     value={formData.wardenName}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
+                                                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-4 text-white text-base md:text-sm focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                                     placeholder="Enter Warden's Name"
                                                 />
                                             </div>
@@ -636,7 +640,7 @@ const Registration = () => {
                                         <div className="space-y-2">
                                             <label className="text-sm text-gray-400 ml-1">Warden Phone Number</label>
                                             <div className="relative">
-                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500">
+                                                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500 pointer-events-none">
                                                     <Phone size={18} />
                                                 </div>
                                                 <input
@@ -649,7 +653,7 @@ const Registration = () => {
                                                     value={formData.wardenPhone}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    className="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 text-white focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
+                                                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-4 text-white text-base md:text-sm focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all placeholder:text-gray-600"
                                                     placeholder="10 digit mobile number"
                                                 />
                                             </div>
@@ -722,7 +726,7 @@ const Registration = () => {
                             {isSubmitting ? (
                                 <>
                                     <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                                    Registering...
+                                    {registrationStatus || 'Registering...'}
                                 </>
                             ) : (
                                 'Register Now'

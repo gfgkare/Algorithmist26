@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Terminal, Award, Briefcase, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
+// import CountdownTimer from './CountdownTimer'; // Removed timer feature
 import { useNavigate } from 'react-router-dom';
 
 const ColorCycleText = ({ text }) => {
@@ -30,6 +31,7 @@ const ColorCycleText = ({ text }) => {
 
 const Hero = () => {
     const navigate = useNavigate();
+
     return (
         <section id="hero" className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-20">
             {/* Background Elements */}
@@ -85,7 +87,7 @@ const Hero = () => {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => navigate('/register')}
-                            className="px-6 py-3 rounded-xl font-bold text-white shadow-lg shadow-green-500/20 flex items-center justify-center gap-2 text-lg"
+                            className="px-6 py-3 rounded-xl font-bold text-white shadow-lg flex items-center justify-center gap-2 text-lg transition-all shadow-green-500/20 cursor-pointer"
                             style={{ background: 'var(--primary)' }}
                         >
                             Register Now <ArrowRight size={20} />
@@ -137,6 +139,8 @@ const Hero = () => {
                             </div>
                         </div>
                     </motion.div>
+
+
                 </motion.div>
 
                 {/* Right Graphic */}
@@ -146,6 +150,7 @@ const Hero = () => {
                     transition={{ duration: 0.8 }}
                     className="relative hidden md:block"
                 >
+
                     <div className="relative z-10 bg-white p-6 rounded-2xl shadow-2xl border border-gray-100 transform rotate-[-5deg] hover:rotate-0 transition-all duration-500">
                         <div className="flex items-center gap-2 mb-4 border-b border-gray-100 pb-2">
                             <div className="w-3 h-3 rounded-full bg-red-400"></div>

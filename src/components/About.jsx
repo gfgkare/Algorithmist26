@@ -23,7 +23,7 @@ const About = () => {
                             We are excited to Introduce <strong className="text-white">“Algorithmist <span className="text-green-500">26”</span></strong>, a series of algorithmic coding events presented by the <strong className="text-white">GFG CAMPUS BODY KARE</strong> and proudly sponsored by GeeksforGeeks.
                         </p>
                         <p className="text-gray-400 mb-8 leading-relaxed">
-                            This Competition is composed of five rounds, with each round progressively increasing in complexity and challenge. Throughout the event, participants will have the opportunity to acquaint themselves with 30 distinct algorithms and acquire practical skills to utilize them in real-world situations. Our primary objective is to provide students with a platform to enhance their coding proficiency and critical thinking capabilities.
+                            This Competition is composed of five rounds. Throughout the event, participants will have the opportunity to acquaint themselves with 25 distinct algorithms and acquire practical skills to utilize them in real-world situations. Our primary objective is to provide students with a platform to enhance their coding proficiency and critical thinking capabilities.
                         </p>
 
                         <div className="grid grid-cols-2 gap-6">

@@ -95,7 +95,7 @@ const Navbar = () => {
                     ))}
                     <button
                         onClick={handleRegisterClick}
-                        className="px-6 py-2.5 rounded-full font-semibold text-white shadow-lg hover:shadow-green-500/30 hover:-translate-y-0.5 transition-all text-sm"
+                        className="px-6 py-2.5 rounded-full font-semibold text-white shadow-lg transition-all text-sm hover:shadow-green-500/30 hover:-translate-y-0.5"
                         style={{ background: 'var(--primary)', color: 'white' }}
                     >
                         Register Now
