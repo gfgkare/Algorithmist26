@@ -135,7 +135,7 @@ const Hero = () => {
                                 <Briefcase size={16} />
                             </div>
                             <div className="text-sm md:text-lg font-bold text-green-400 mt-1.5">
-                                Registration Fees : <strong className="text-sm md:text-lg text-gray-200">Rs 150 /-</strong>
+                                Registration Fee : <strong className="text-sm md:text-lg text-gray-200">Rs 150 /-</strong>
                             </div>
                         </div>
                     </motion.div>

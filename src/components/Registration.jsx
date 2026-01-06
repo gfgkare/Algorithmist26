@@ -388,7 +388,7 @@ const Registration = () => {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm text-gray-400 ml-1">Official Email ID</label>
+                                    <label className="text-sm text-gray-400 ml-1">College Mail ID</label>
                                     <div className="relative">
                                         <div className="absolute left-4 top-1/2 -translate-y-1/2 text-green-500">
                                             <CreditCard size={18} />
