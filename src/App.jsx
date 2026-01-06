@@ -28,7 +28,9 @@ const PageLoader = () => (
 );
 
 function App() {
-    const [introFinished, setIntroFinished] = useState(false);
+    const [introFinished, setIntroFinished] = useState(() => {
+        return window.location.pathname.includes('/gfgkare-a4u');
+    });
 
     return (
         <Router>
