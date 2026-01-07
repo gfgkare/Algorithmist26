@@ -4,11 +4,11 @@ import { CheckCircle2, BookOpen, Presentation, Bug, Terminal } from 'lucide-reac
 import TiltCard from './TiltCard';
 
 const rounds = [
-    { id: 1, title: "Round 1: AlgoTussle", subtitle: "Quiz", desc: "Scenario based problems, Time-Space Complexity, Predict the output.", icon: <CheckCircle2 size={24} /> },
-    { id: 2, title: "Round 2: AlgoRythms", subtitle: "Seminar", desc: "Seminar based on selected Algorithms (3 – 4).", prize: "Prize: GFG T-Shirt & Goodies + Merit Cert", prizeIcon: "👕", icon: <BookOpen size={24} /> },
-    { id: 3, title: "Round 3: Page2Stage", subtitle: "Article Presentation", desc: "PPT Presentation based on Recent Algorithm.", prize: "Prize: Zebronics Keyboard & Mouse Combo", prizeIcon: "⌨️", icon: <Presentation size={24} /> },
-    { id: 4, title: "Round 4: AlgoSniff", subtitle: "Debug", desc: "Debugging the Given Code.", prize: "Prize: GFG Diary, Pen & Key Chain", prizeIcon: "🎁", icon: <Bug size={24} /> },
-    { id: 5, title: "Round 5: CodeBlitz", subtitle: "Grand Finale", desc: "Showcasing the Coding Skills.", prize: "Prize: Cash Prizes worth ₹6000", prizeIcon: "💰", icon: <Terminal size={24} /> }
+    { id: 1, title: "Round 1: AlgoTussle", subtitle: "Quiz", desc: "Scenario based problems, Time-Space Complexity, Predict the output.", icon: <CheckCircle2 size={24} />, date: "JAN 22 2026" },
+    { id: 2, title: "Round 2: AlgoRythms", subtitle: "Seminar", desc: "Seminar based on selected Algorithms (3 – 4).", prize: "Prize: GFG T-Shirt & Goodies + Merit Cert", prizeIcon: "👕", icon: <BookOpen size={24} />, date: "FEB  2026" },
+    { id: 3, title: "Round 3: Page2Stage", subtitle: "Article Presentation", desc: "PPT Presentation based on Recent Algorithm.", prize: "Prize: Zebronics Keyboard & Mouse Combo", prizeIcon: "⌨️", icon: <Presentation size={24} />, date: "FEB 2026" },
+    { id: 4, title: "Round 4: AlgoSniff", subtitle: "Debug", desc: "Debugging the Given Code.", prize: "Prize: GFG Diary, Pen & Key Chain", prizeIcon: "🎁", icon: <Bug size={24} />, date: "MARCH 2026" },
+    { id: 5, title: "Round 5: CodeBlitz", subtitle: "Grand Finale", desc: "Showcasing the Coding Skills.", prize: "Prize: Cash Prizes worth ₹6000", prizeIcon: "💰", icon: <Terminal size={24} />, date: "MARCH 2026" }
 ];
 
 const Roadmap = () => {
@@ -57,10 +57,13 @@ const Roadmap = () => {
                                     {/* Content Side */}
                                     <div className={`w-full md:w-[calc(50%-2rem)] pl-12 md:pl-0 ${isEven ? 'md:text-left' : 'md:text-right'}`}>
                                         <TiltCard className="inline-block w-full">
-                                            <div className="glass-card p-5 md:p-6 rounded-2xl border border-white/10 shadow-lg hover:shadow-green-500/20 transition-all bg-white/5 backdrop-blur-sm">
+                                            <div className="glass-card p-5 md:p-6 rounded-2xl border border-white/10 shadow-lg hover:shadow-green-500/20 transition-all bg-white/5 backdrop-blur-sm relative overflow-hidden">
+                                                <div className="absolute top-0 right-0 bg-green-600/20 text-green-400 px-3 py-1 text-xs font-bold rounded-bl-xl border-b border-l border-white/10">
+                                                    {round.date}
+                                                </div>
                                                 <h3 className="text-xl md:text-2xl font-bold text-gray-100 mb-1">{round.title}</h3>
                                                 <h4 className="text-base md:text-lg font-semibold text-green-400 mb-2">{round.subtitle}</h4>
-                                                <p className="text-gray-100 mb-1">{round.desc}</p>
+                                                <p className="text-gray-100 mb-3">{round.desc}</p>
                                                 {round.prize && (
                                                     <div className={`flex items-center gap-2 text-yellow-400 font-medium text-sm bg-yellow-400/10 px-3 py-1.5 rounded-lg w-fit border border-yellow-400/20 shadow-sm ${[2, 4].includes(round.id) ? 'ml-auto' : ''}`}>
                                                         <span className="text-lg">{round.prizeIcon}</span>
