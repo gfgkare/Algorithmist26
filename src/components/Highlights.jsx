@@ -106,9 +106,9 @@ const Highlights = () => {
                                 >
                                     {isPlaying ? <Pause fill="currentColor" size={24} /> : <Play fill="currentColor" size={24} className="ml-1" />}
                                 </button>
-                                <div className="hidden sm:block">
-                                    <h3 className="text-white font-bold text-lg md:text-xl tracking-wide">Algorithmist Experience</h3>
-                                    <p className="text-green-400/80 text-xs font-medium uppercase tracking-widest">{isPlaying ? 'Now Playing' : 'Tap to Play'}</p>
+                                <div>
+                                    <h3 className="text-white font-bold text-base md:text-xl tracking-wide">Algorithmist Experience</h3>
+                                    <p className="text-green-400/80 text-[10px] md:text-xs font-medium uppercase tracking-widest">{isPlaying ? 'Now Playing' : 'Tap to Play'}</p>
                                 </div>
                             </div>
 
