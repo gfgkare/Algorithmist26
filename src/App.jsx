@@ -61,7 +61,7 @@ function App() {
                             </div>
                         } />
 
-                        <Route path="/register" element={
+                        <Route path="/regclosed" element={
                             <div className="relative z-10">
                                 <Registration />
                             </div>

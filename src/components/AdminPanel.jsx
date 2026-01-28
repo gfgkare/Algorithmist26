@@ -76,7 +76,8 @@ const AdminPanel = () => {
         const matchesSearch = (
             user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.regNo?.includes(searchTerm) ||
-            user.transactionId?.includes(searchTerm)
+            user.transactionId?.includes(searchTerm) ||
+            user.gender?.toLowerCase().includes(searchTerm.toLowerCase())
         );
         const matchesFilter = filterType === 'all' || user.accommodation === filterType;
         return matchesSearch && matchesFilter;

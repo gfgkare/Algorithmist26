@@ -70,8 +70,8 @@ const Highlights = () => {
 
                         <motion.div whileTap={{ scale: 0.95 }}>
                             <Link
-                                to="/register"
-                                className="group relative inline-flex items-center gap-3 px-8 md:px-10 py-4 md:py-5 bg-green-600 text-black font-bold text-lg rounded-full transition-all duration-300 shadow-[0_0_30px_rgba(34,197,94,0.2)] hover:bg-green-500 hover:scale-105 active:shadow-inner"
+                                // to="/register"
+                                className="group relative inline-flex items-center gap-3 px-8 md:px-10 py-4 md:py-5 bg-gray-600 text-black font-bold text-lg rounded-full transition-all duration-300 shadow-[0_0_30px_rgba(34,197,94,0.2)] hover:bg-gray-500 hover:scale-105 active:shadow-inner"
                             >
                                 Register for 2026
                                 <Play size={16} fill="currentColor" className="ml-1" />

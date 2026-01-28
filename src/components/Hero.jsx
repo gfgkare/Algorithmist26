@@ -82,13 +82,24 @@ const Hero = () => {
                         A Grand Celebration of Algorithms, Logic & Coding Excellence.
                     </h2>
 
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="mb-6 p-3 md:p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-center max-w-lg mx-auto md:mx-0"
+                    >
+                        <p className="text-red-400 font-semibold text-sm md:text-base">
+                            🔴 REGISTRATIONS ARE CLOSED !
+                        </p>
+                    </motion.div>
+
                     <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                         <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            onClick={() => navigate('/register')}
+                            // onClick={() => navigate('/register')}
                             className="px-6 py-3 rounded-xl font-bold text-white shadow-lg flex items-center justify-center gap-2 text-lg transition-all shadow-green-500/20 cursor-pointer"
-                            style={{ background: 'var(--primary)' }}
+                            style={{ background: '#6b7280' }}
                         >
                             Register Now <ArrowRight size={20} />
                         </motion.button>
