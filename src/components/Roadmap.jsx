@@ -6,7 +6,7 @@ import TiltCard from './TiltCard';
 const rounds = [
     { id: 1, title: "Round 1: AlgoTussle", subtitle: "Quiz", desc: "Scenario based problems, Time-Space Complexity, Predict the output.", prize: "Prize: Merit Certificate", prizeIcon: "📜", icon: <CheckCircle2 size={24} />, date: "FEB 11 2026" },
     { id: 2, title: "Round 2: AlgoRythms", subtitle: "Seminar", desc: "Seminar based on selected Algorithms (3 – 4).", prize: "Prize: GFG T-Shirt & Goodies + Merit Certificate", prizeIcon: "👕", icon: <BookOpen size={24} />, date: "FEB 17 - FEB 19 2026" },
-    { id: 3, title: "Round 3: Page2Stage", subtitle: "Article Presentation", desc: "PPT Presentation based on Recent Algorithm.", prize: "Prize: Zebronics Keyboard & Mouse Combo", prizeIcon: "⌨️", icon: <Presentation size={24} />, date: "MARCH 3 - MARCH 5 2026" },
+    { id: 3, title: "Round 3: Page2Stage", subtitle: "Article Presentation", desc: "PPT Presentation based on Recent Algorithm.", prize: "Prize: Zebronics Keyboard ", prizeIcon: "⌨️", icon: <Presentation size={24} />, date: "MARCH 3 - MARCH 5 2026" },
     { id: 4, title: "Round 4: AlgoSniff", subtitle: "Debug", desc: "Debugging the Given Code.", prize: "Prize: GFG Diary, Pen & Key Chain", prizeIcon: "🎁", icon: <Bug size={24} />, date: "MARCH 18 2026" },
     { id: 5, title: "Round 5: CodeBlitz", subtitle: "Grand Finale", desc: "Showcasing the Coding Skills.", prize: "Prize: Cash Prizes worth ₹6000", prizeIcon: "💰", icon: <Terminal size={24} />, date: "MARCH 30 2026" }
 ];
